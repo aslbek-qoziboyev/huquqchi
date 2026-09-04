@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
 class MainActivity : AppCompatActivity() {
     private val navy = Color.rgb(15, 23, 42)
     private val primary = Color.rgb(37, 99, 235)
-    private val background = Color.rgb(248, 250, 252)
+    private val bgColor = Color.rgb(248, 250, 252)
     private val card = Color.WHITE
     private val text = Color.rgb(15, 23, 42)
     private val muted = Color.rgb(100, 116, 139)
@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = background
-        window.navigationBarColor = background
+        window.statusBarColor = bgColor
+        window.navigationBarColor = bgColor
         showDashboard()
     }
 
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun base(): LinearLayout {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(background)
+            setBackgroundColor(bgColor)
         }
         root.addView(header(), LinearLayout.LayoutParams(-1, dp(64)))
 
