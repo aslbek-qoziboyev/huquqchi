@@ -2,35 +2,31 @@ import { defineStore } from 'pinia';
 import { Message, ChatSession } from '../types/assistant';
 import { AssistantService } from '../services/assistant';
 
+const createDefaultSession = (): ChatSession => ({
+  id: 'default',
+  title: 'Yangi huquqiy suhbat',
+  messages: [
+    {
+      id: 'welcome',
+      role: 'assistant',
+      content: 'Assalomu alaykum! Men sizning raqamli huquqiy yordamchingizman. Muammoingizni oddiy tilda batafsil yozing, men uning huquqiy asosi va qonuniy yechimini topib beraman. Masalan:\n\n*“Internetdan telefon sotib oldim. Telefon nosoz chiqdi. Sotuvchi pulimni qaytarmayapti. Nima qilishim mumkin?”*\n*“Ish beruvchim navbatdagi mehnat ta’tiliga chiqishimga ruxsat bermayapti. Huquqlarim qanday?”*',
+      createdAt: new Date()
+    }
+  ],
+  createdAt: new Date()
+});
+
 export const useAssistantStore = defineStore('assistant', {
   state: () => ({
-    sessions: [] as ChatSession[],
+    sessions: [createDefaultSession()] as ChatSession[],
     currentSessionId: 'default' as string,
     loading: false,
     error: null as string | null,
   }),
   getters: {
-    currentSession(): ChatSession {
-      let session = this.sessions.find(s => s.id === this.currentSessionId);
-      if (!session) {
-        session = {
-          id: this.currentSessionId,
-          title: 'Yangi huquqiy suhbat',
-          messages: [
-            {
-              id: 'welcome',
-              role: 'assistant',
-              content: 'Assalomu alaykum! Men sizning raqamli huquqiy yordamchingizman. Muammoingizni oddiy tilda batafsil yozing, men uning huquqiy asosi va qonuniy yechimini topib beraman. Masalan:\n\n*“Internetdan telefon sotib oldim. Telefon nosoz chiqdi. Sotuvchi pulimni qaytarmayapti. Nima qilishim mumkin?”*\n*“Ish beruvchim navbatdagi mehnat ta’tiliga chiqishimga ruxsat bermayapti. Huquqlarim qanday?”*',
-              createdAt: new Date()
-            }
-          ],
-          createdAt: new Date()
-        };
-        // Use non-mutating update patterns or push since state is simple
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.sessions.push(session);
-      }
-      return session;
+    currentSession(state): ChatSession {
+      const found = state.sessions.find(s => s.id === state.currentSessionId);
+      return found || state.sessions[0];
     },
     messages(): Message[] {
       return this.currentSession?.messages || [];
@@ -76,6 +72,20 @@ export const useAssistantStore = defineStore('assistant', {
     },
     startNewSession() {
       const newId = 'session-' + Date.now();
+      const newSession: ChatSession = {
+        id: newId,
+        title: 'Yangi huquqiy suhbat',
+        messages: [
+          {
+            id: 'welcome-' + newId,
+            role: 'assistant',
+            content: 'Assalomu alaykum! Men sizning raqamli huquqiy yordamchingizman. Yangi murojaatingizni bayon qiling.',
+            createdAt: new Date()
+          }
+        ],
+        createdAt: new Date()
+      };
+      this.sessions.unshift(newSession);
       this.currentSessionId = newId;
       return newId;
     },
@@ -84,8 +94,11 @@ export const useAssistantStore = defineStore('assistant', {
     },
     deleteSession(id: string) {
       this.sessions = this.sessions.filter(s => s.id !== id);
+      if (this.sessions.length === 0) {
+        this.sessions.push(createDefaultSession());
+      }
       if (this.currentSessionId === id) {
-        this.currentSessionId = 'default';
+        this.currentSessionId = this.sessions[0].id;
       }
     }
   }

@@ -1,7 +1,4 @@
 import { Capacitor } from '@capacitor/core';
-import { App } from '@capacitor/app';
-import { StatusBar, Style } from '@capacitor/status-bar';
-import { Network } from '@capacitor/network';
 import { Router } from 'vue-router';
 
 export const MobileAppService = {
@@ -12,6 +9,7 @@ export const MobileAppService = {
 
     try {
       // 1. Configure Status Bar
+      const { StatusBar, Style } = await import('@capacitor/status-bar');
       await StatusBar.setStyle({ style: Style.Dark });
       await StatusBar.setBackgroundColor({ color: '#0f5283' });
     } catch (e) {
@@ -20,7 +18,8 @@ export const MobileAppService = {
 
     try {
       // 2. Handle Android Hardware Back Button
-      App.addListener('backButton', ({ canGoBack }) => {
+      const { App } = await import('@capacitor/app');
+      await App.addListener('backButton', ({ canGoBack }) => {
         const currentPath = router.currentRoute.value.path;
         if (currentPath === '/' || currentPath === '/dashboard') {
           App.exitApp();
@@ -36,7 +35,8 @@ export const MobileAppService = {
 
     try {
       // 3. Network connection listener
-      Network.addListener('networkStatusChange', status => {
+      const { Network } = await import('@capacitor/network');
+      await Network.addListener('networkStatusChange', status => {
         if (!status.connected) {
           console.warn('Internet aloqasi uzildi');
         }

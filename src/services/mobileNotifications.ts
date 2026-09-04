@@ -1,13 +1,16 @@
 import { Capacitor } from '@capacitor/core';
-import { PushNotifications, ActionPerformed, Token } from '@capacitor/push-notifications';
+import type { ActionPerformed, Token } from '@capacitor/push-notifications';
 
 export const MobileNotificationsService = {
   async initPushNotifications() {
+    // Only execute on native Android / iOS platforms
     if (!Capacitor.isNativePlatform()) {
       return;
     }
 
     try {
+      const { PushNotifications } = await import('@capacitor/push-notifications');
+
       let permStatus = await PushNotifications.checkPermissions();
 
       if (permStatus.receive === 'prompt') {
@@ -21,17 +24,16 @@ export const MobileNotificationsService = {
 
       await PushNotifications.register();
 
-      PushNotifications.addListener('registration', (token: Token) => {
+      await PushNotifications.addListener('registration', (token: Token) => {
         console.log('Push bildirishnoma tokeni:', token.value);
-        // Save token or send to backend
         localStorage.setItem('mobile_push_token', token.value);
       });
 
-      PushNotifications.addListener('registrationError', (error: any) => {
+      await PushNotifications.addListener('registrationError', (error: any) => {
         console.error('Push ro‘yxatdan o‘tishda xatolik: ', error);
       });
 
-      PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
+      await PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
         console.log('Foydalanuvchi bildirishnomani ochdi:', notification);
       });
     } catch (e) {
