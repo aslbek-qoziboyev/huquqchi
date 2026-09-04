@@ -109,10 +109,30 @@ Kalitlar:
 
 ---
 
-## 7. Kelgusi Rejalar: Mobil Ilova Arxitekturasi (Phase 2)
+---
 
-Foydalanuvchi tomonidan tasdiqlangandan so‘ng boshlanadigan Phase 2 quyidagilarni o‘z ichiga oladi:
-- **Mobile Stack:** Capacitor yoki React Native / Flutter yordamida iOS va Android ilovalari.
-- **Oflayn Rejim:** Qonunlar moddalari va arizalar shablonlarini oflayn keshda saqlash (SQLite / IndexedDB).
-- **Push Bildirishnomalar:** Huquqiy o‘zgarishlar va murojaat javoblari haqida tezkor xabarnomalar.
-- **Biometriya:** Touch ID / Face ID orqali xavfsiz tizimga kirish.
+## 7. Mobil Ilova Arxitekturasi (Android)
+
+Platformaning mobil versiyasi zamonaviy **Capacitor + Native Android (Gradle)** integratsiyasi asosida ishlab chiqilgan bo‘lib, `/android` papkasida to‘liq Android Studio loyihasiga ega.
+
+### Mobil Imkoniyatlar:
+- **App ID:** `uz.meninghuquqim.app`
+- **Native Android loyihasi:** `/android` papkasida Gradle loyihasi (Target SDK 34, Min SDK 24).
+- **Apparat Back Button:** Android hardware orqaga qaytish tugmasi Vue Router bilan to‘liq integratsiyalashgan (bosh sahifada ilovadan chiqish, ichki sahifalarda oldingi sahifaga qaytish).
+- **Status Bar:** Mobil qurilma holat paneli ilova mavzusiga mos ravishda avtomatik boshqariladi (`@capacitor/status-bar`).
+- **Push Bildirishnomalar:** Qonunchilik yangiliklari va ariza holati o‘zgargani haqida xabar berish servisi (`@capacitor/push-notifications`).
+- **Tarmoq nazorati:** Internet aloqasi holatini avtomatik kuzatish (`@capacitor/network`).
+
+### Mobil Ilovani Ishga Tushirish va Sinxronlash:
+```bash
+# Web kodni build qilib, Android loyihasiga sinxronlash:
+npm run android:sync
+
+# Android Studio'da ochish:
+npm run android:open
+
+# Android APK / AAB build qilish (Gradle orqali):
+cd android
+./gradlew assembleDebug
+```
+Natijada `android/app/build/outputs/apk/debug/app-debug.apk` fayli yaratiladi.

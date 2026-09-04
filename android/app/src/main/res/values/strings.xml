@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Mening Huquqim</string>
+    <string name="title_activity_main">Mening Huquqim</string>
+    <string name="package_name">uz.meninghuquqim.app</string>
+    <string name="custom_url_scheme">uz.meninghuquqim.app</string>
+</resources>
