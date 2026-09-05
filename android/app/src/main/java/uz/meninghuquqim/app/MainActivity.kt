@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +23,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var content: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Theme.SplashScreen requires installing the AndroidX splash screen
+        // before super.onCreate() to avoid launch-time crashes.
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         window.statusBarColor = bgColor
         window.navigationBarColor = bgColor
